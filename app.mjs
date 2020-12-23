@@ -5,11 +5,16 @@ import { init as initWsServer } from './ws/server.mjs'
 
 const app = http.createServer(function(request, response) {
   console.log((new Date()) + ' Received request for ' + request.url)
-  response.writeHead(200)
-  response.end('Server Running.')
+  if(process.env.NODE_ENV !== 'production') {
+    response.writeHead(200)
+    response.end('Server Running.')
+  } else {
+    response.writeHead(404)
+    response.end()
+  }
 })
 
-app.listen(8081, function() {
+app.listen(process.env.PORT || 8081, function() {
   console.log((new Date()) + ' Server is listening on port: ' + chalk.cyan('8081'))
 })
 
