@@ -19,7 +19,7 @@ export async function init(server) {
     autoAcceptConnections: false
   })
 
-  console.log(chalk.blue('Web Socket Server created.'))
+  console.log(chalk.blue('Web Socket Server Created.'))
 
   wsServer.on('request', function(request) {
 
