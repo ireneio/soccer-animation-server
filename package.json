@@ -6,7 +6,7 @@
     "start": "babel-node ./bin/www.mjs",
     "build:dev": "webpack-cli --entry bin/www.mjs --config webpack.config.cjs -w --progress --color",
     "build:prod": "webpack --config webpack.config.cjs --progress --color",
-    "dev": "nodemon --exec babel-node ./bin/www.mjs"
+    "dev": "nodemon --exec babel-node ./app.mjs"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",

@@ -1,12 +1,9 @@
 import websocket from 'websocket'
 import chalk from 'chalk'
-import * as util from 'util'
-import { app as httpServer } from '../app.mjs'
+// import * as util from 'util'
 import { latestData } from './client.mjs'
 
-setInterval(() => {
-  console.log(chalk.yellow('Latest Data: ') + util.inspect(latestData))
-}, 1000)
+
 
 function originIsAllowed(origin) {
   // TODO: detect origin
@@ -16,9 +13,9 @@ function originIsAllowed(origin) {
 // WS server
 const WebSocketServer = websocket.server
 
-export async function init() {
+export async function init(server) {
   const wsServer = await new WebSocketServer({
-    httpServer,
+    httpServer: server,
     autoAcceptConnections: false
   })
 
@@ -32,27 +29,25 @@ export async function init() {
       console.log((new Date()) + ' Connection from origin ' + chalk.yellow(request.origin) + ' rejected.')
       return
     }
-  
+   
     // init
-    const connection = request.accept('echo-protocol', request.origin)
-    console.log((new Date() + ' Connection accepted.'))
+    const connection = request.accept(null, request.origin)
+    console.log((new Date() + chalk.blue(' Connection accepted.')))
   
     // received
     connection.on('message', function(message) {
-      // if(message.type === 'utf8') {
-      //   console.log('Message Received: ' + message.utf8Data)
-      //   connection.sendUTF(message.utf8Data)
-      // } else if(message.type === 'binary') {
-      //   console.log('Binary Message Received: ' + message.binaryData.length + ' bytes.')
-      //   connection.sendBytes(message.binaryData)
-      // }
-
-      connection.sendUTF(latestData)
+      console.log(chalk.yellow('Message received: ' + message.utf8Data))
     })
   
     // close
     connection.on('close', function(reasonCode, description) {
-      console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected. Reason: ' + reasonCode + '. Description: ' + description)
+      console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected. \nReason: ' + reasonCode + '. \nDescription: ' + description)
     })
+
+    setInterval(() => {
+      // console.log(chalk.yellow('Latest Data: ') + util.inspect(latestData))
+      connection.sendUTF(JSON.stringify(latestData))
+      console.log(chalk.blueBright(new Date().toLocaleString('zh-TW') + ' Data Sent.'))
+    }, 1000)
   })
 }

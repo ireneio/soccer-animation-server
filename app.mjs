@@ -1,26 +1,20 @@
-import express from 'express'
-import * as path from 'path'
-
-
+import chalk from 'chalk'
+import http from 'http'
 import { init as initW3CClient } from './ws/auth.mjs'
 import { init as initWsServer } from './ws/server.mjs'
 
-export const app = express()
+
+const app = http.createServer(function(request, response) {
+    console.log((new Date()) + ' Received request for ' + request.url)
+    response.writeHead(401)
+    response.end()
+})
+
+app.listen(8081, function() {
+    console.log((new Date()) + ' Server is listening on port: ' + chalk.cyan('8081'))
+})
 
 await initW3CClient()
-await initWsServer()
-
-// routes
-import indexRouter from './routes/index.mjs'
-
-
-// ES6 dirname
-const __dirname = path.resolve(path.dirname(''))
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-app.use(express.static(path.join(__dirname, 'public')))
-
-app.use('/', indexRouter)
+await initWsServer(app)
 
 export default app
