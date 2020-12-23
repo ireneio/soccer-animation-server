@@ -1,21 +1,17 @@
-import * as path from 'path'
-import nodeExternals from 'webpack-node-externals'
-
-const __dirname = path.resolve(path.dirname(''))
-
-const { nodeExternalsFunc } = nodeExternals
+const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 const config = {
-  // target: 'node',
-  externals: [nodeExternalsFunc()],
+  target: 'node',
+  externals: [nodeExternals()],
+  externalsType: "import",
   entry: {
-    'index': './app.mjs',
-    'server': './bin/www.mjs'
+    'app': './app.mjs'
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].bundle.mjs',
-    // libraryTarget: 'commonjs2',
+    filename: '[name].bundle.js',
+    // libraryTarget: 'commonjs2'
   },
   module: {   //設定你的檔案選項
     rules: [
@@ -26,11 +22,14 @@ const config = {
       },
     ],
   },
-  targets: {
-    'node': 'current'
+  experiments: {
+    topLevelAwait: true
   },
-  modules: false,
-  externalsType: "import"
+  resolve: {
+    fallback: {
+      http: require.resolve("http")
+    }
+  }
 }
 
-export default config
+module.exports = config

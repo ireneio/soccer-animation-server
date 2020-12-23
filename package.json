@@ -1,12 +1,13 @@
 {
   "name": "sport-animation-server-node",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "babel-node ./bin/www.mjs",
-    "build:dev": "webpack-cli --entry bin/www.mjs --config webpack.config.cjs -w --progress --color",
-    "build:prod": "webpack --config webpack.config.cjs --progress --color",
-    "dev": "nodemon --exec babel-node ./app.mjs"
+    "start": "npm run build:prod && babel-node ./dist/app.bundle.js",
+    "dev": "nodemon --exec babel-node ./app.mjs",
+    "dev:bundled": "nodemon --exec babel-node ./dist/app.bundle.js",
+    "build:dev": "webpack-cli --config webpack.config.cjs -w --progress --color",
+    "build:prod": "webpack --config webpack.config.cjs --progress --color"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
@@ -18,11 +19,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "chalk": "^4.1.0",
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
+    "http": "0.0.1-security",
     "nodemon": "^2.0.6",
     "webpack-node-externals": "^2.5.2",
     "websocket": "^1.0.33"
@@ -30,6 +27,5 @@
   "devDependencies": {
     "webpack": "^5.11.0",
     "webpack-cli": "^4.2.0"
-  },
-  "type": "module"
+  }
 }
