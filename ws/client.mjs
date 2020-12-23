@@ -5,7 +5,7 @@ const W3CWebSocketServer = websocket.w3cwebsocket
 
 export let latestData
 
-function reorganizeData(message) {
+function mapData(message) {
   // TODO
   return message
 }
@@ -31,9 +31,10 @@ export async function initW3CClient() {
 
     client.onmessage = function(e) {
       if (typeof e.data === 'string') {
-        latestData = reorganizeData(JSON.parse(e.data))
+        latestData = mapData(JSON.parse(e.data))
       }
     }
+
     return true
   } catch(e) {
     console.log(chalk.red(e.message))

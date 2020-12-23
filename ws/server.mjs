@@ -2,6 +2,8 @@ import websocket from 'websocket'
 import chalk from 'chalk'
 import { latestData } from './client.mjs'
 
+let interval
+
 function originIsAllowed(origin) {
   // TODO: detect origin
   return true
@@ -41,9 +43,14 @@ export async function init(server) {
       console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected. \nReason: ' + reasonCode + '. \nDescription: ' + description)
     })
 
-    setInterval(() => {
+    // send to F2E
+    interval = setInterval(() => {
       connection.sendUTF(JSON.stringify(latestData))
       console.log(chalk.blueBright(new Date().toLocaleString('zh-TW') + ' Data Sent.'))
     }, 1000)
   })
+}
+
+export function stopEmitting() {
+  interval = null
 }

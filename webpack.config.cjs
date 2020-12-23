@@ -10,10 +10,9 @@ const config = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].bundle.js',
-    // libraryTarget: 'commonjs2'
+    filename: '[name].bundle.js'
   },
-  module: {   //設定你的檔案選項
+  module: {
     rules: [
       {
         test: /\.(mjs|js)$/,
