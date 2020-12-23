@@ -1,9 +1,6 @@
 import websocket from 'websocket'
 import chalk from 'chalk'
-// import * as util from 'util'
 import { latestData } from './client.mjs'
-
-
 
 function originIsAllowed(origin) {
   // TODO: detect origin
@@ -45,7 +42,6 @@ export async function init(server) {
     })
 
     setInterval(() => {
-      // console.log(chalk.yellow('Latest Data: ') + util.inspect(latestData))
       connection.sendUTF(JSON.stringify(latestData))
       console.log(chalk.blueBright(new Date().toLocaleString('zh-TW') + ' Data Sent.'))
     }, 1000)
