@@ -26,6 +26,7 @@ export async function initW3CClient() {
     
     client.onclose = function() {
       console.log(chalk.green('W3C Client Closed.'))
+      initW3CClient()
     }
 
     client.onmessage = function(e) {
