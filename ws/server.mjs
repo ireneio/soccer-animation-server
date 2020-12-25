@@ -45,8 +45,10 @@ export async function init(server) {
 
     // send to F2E
     interval = setInterval(() => {
-      connection.sendUTF(JSON.stringify(latestData))
-      console.log(chalk.blueBright(new Date().toLocaleString('zh-TW') + ' Data Sent.'))
+      if(latestData !== null) {
+        connection.sendUTF(JSON.stringify(latestData))
+        console.log(chalk.blueBright(new Date().toLocaleString('zh-TW') + ' Data Sent.'))
+      }
     }, 1000)
   })
 }

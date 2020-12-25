@@ -3,17 +3,28 @@ import chalk from 'chalk'
 
 const W3CWebSocketServer = websocket.w3cwebsocket
 
-export let latestData
+export let latestData = null
 
 function mapData(message) {
   // TODO
+  // const { score, eventId, events } = message
+  // const { matchTime, type, info, side, setNumber, typeId, gameNumber, gameScore, setScore } = events[0]
+  // return {
+  //   eventId,
+  //   eventName: type || info || typeId,
+  //   eventSide: side,
+  //   matchNumber: gameNumber,
+  //   matchScore: gameScore,
+  //   matchTime: matchTime,
+  //   setScore
+  // }
   return message
 }
 
 // W3C Socket Client
-export async function initW3CClient() {
+export async function initW3CClient(matchId) {
   try {
-    const client = await new W3CWebSocketServer('ws://api-lekima-demo.ceshi22.com/product/animation/websocket-livedata?iid=24847468', '')
+    const client = await new W3CWebSocketServer(`ws://api-lekima-demo.ceshi22.com/product/animation/websocket-livedata?iid=${matchId}`, '')
     console.log(chalk.blue('W3C Client Created.'))
 
     client.onerror = function() {
