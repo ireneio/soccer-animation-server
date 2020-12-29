@@ -1,6 +1,7 @@
 import websocket from 'websocket'
 import chalk from 'chalk'
-import { latestData } from './client.mjs'
+// import { latestData } from './client.mjs'
+import { latestData } from '../app.mjs'
 
 let interval
 

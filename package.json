@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/core": "^7.12.10",
     "@babel/node": "^7.12.10",
+    "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.11",
     "axios": "^0.21.1",
     "babel-core": "^6.26.3",
