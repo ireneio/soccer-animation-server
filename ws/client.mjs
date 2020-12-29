@@ -1,9 +1,14 @@
 import websocket from 'websocket'
 import chalk from 'chalk'
+import axios from 'axios'
 
 const W3CWebSocketServer = websocket.w3cwebsocket
 
 export let latestData = null
+
+axios.get("http://localhost:9000/soccerData.json").then(res => {
+  console.log('res ', res.data.events);
+})
 
 function mapData(message) {
   // TODO
@@ -27,27 +32,27 @@ export async function initW3CClient(matchId) {
     const client = await new W3CWebSocketServer(`ws://api-lekima-demo.ceshi22.com/product/animation/websocket-livedata?iid=${matchId}`, '')
     console.log(chalk.blue('W3C Client Created.'))
 
-    client.onerror = function() {
+    client.onerror = function () {
       console.log(chalk.red.bold('W3C Connection Error!'))
     }
-    
-    client.onopen = function() {
+
+    client.onopen = function () {
       console.log(chalk.green('W3C Client Connected.'))
     }
-    
-    client.onclose = function() {
+
+    client.onclose = function () {
       console.log(chalk.green('W3C Client Closed.'))
       initW3CClient()
     }
 
-    client.onmessage = function(e) {
+    client.onmessage = function (e) {
       if (typeof e.data === 'string') {
         latestData = mapData(JSON.parse(e.data))
       }
     }
 
     return true
-  } catch(e) {
+  } catch (e) {
     console.log(chalk.red(e.message))
   }
 }

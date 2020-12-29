@@ -4,6 +4,12 @@ import { init as initW3CClient } from './ws/auth.mjs'
 import { init as initWsServer } from './ws/server.mjs'
 import { init as initHttpClient, matchList } from './http/index.mjs'
 
+import express from 'express';
+const app2 = express();
+const port = 9000;
+
+app2.use(express.static('public'));
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -12,12 +18,12 @@ const corsHeaders = {
 
 export let matchId = ''
 
-const app = http.createServer(async function(request, response) {
+const app = http.createServer(async function (request, response) {
   console.log((new Date()) + ' Received request for ' + request.url)
-  if(request.url.toString() === '/list') {
+  if (request.url.toString() === '/list') {
     response.writeHead(200, 'success', corsHeaders)
     response.end(JSON.stringify(matchList))
-  } else if(request.url.toString().includes('/id/')) {
+  } else if (request.url.toString().includes('/id/')) {
     matchId = request.url.split('/')[request.url.split('/').length - 1]
     response.writeHead(200, 'success', corsHeaders)
     response.end()
@@ -28,16 +34,21 @@ const app = http.createServer(async function(request, response) {
   }
 })
 
-app.listen(process.env.PORT || 8081, function() {
+app.listen(process.env.PORT || 8081, function () {
   console.log((new Date()) + ' Server is listening on port: ' + chalk.cyan('8081'))
+})
+
+app2.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
 })
 
 async function init() {
   try {
-    await initW3CClient(matchId)
-    await initWsServer(app)
+    // await initW3CClient(matchId)
+    // await initWsServer(app)
     await initHttpClient()
-  } catch(e) {
+
+  } catch (e) {
     console.log(chalk.red(e.message))
   }
 }

@@ -19,6 +19,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "chalk": "^4.1.0",
+    "express": "^4.17.1",
     "http": "0.0.1-security",
     "nodemon": "^2.0.6",
     "webpack-node-externals": "^2.5.2",
