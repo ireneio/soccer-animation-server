@@ -29,7 +29,7 @@ function mapTempSoccerData(data) {
       posY 
     } = event
 
-    console.log(type, info, typeId)
+    // console.log(type, info, typeId)
     let mapper = {
       event: '',
       team: '',
