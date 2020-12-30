@@ -64,6 +64,11 @@ const app = http.createServer(async function (request, response) {
     console.log(chalk.blueBright('Match Restarted.'))
     response.writeHead(200, 'success', corsHeaders)
     response.end()
+  } else if(request.url.toString() === '/halt') {
+    asyncMimic = null
+    console.log(chalk.blueBright('Match Stopped.'))
+    response.writeHead(200, 'success', corsHeaders)
+    response.end()
   }
   else {
     response.writeHead(404)
