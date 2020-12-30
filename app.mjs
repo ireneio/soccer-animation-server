@@ -77,35 +77,93 @@ app.listen(process.env.PORT || 8081, function () {
   console.log((new Date()) + '\n Server is listening on port: ' + chalk.cyan('8081'))
 })
 
-async function asyncMimicFactory() {
-  const sendDataInterval = 1000
-  const fullMatchData = await getTempSoccerData()
-  let i = 0
+function AsyncMimicFactory() {
 
-  function asyncMimic(data) {
+  function asyncMimic(data, interval) {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(data)
-      }, sendDataInterval)
+      }, interval)
     })
   }
 
-  async function* asyncEventIterator() {
-    while(i < fullMatchData.length) {
-      const data = await asyncMimic(fullMatchData[i])
+  async function* asyncEventIterator(arr, interval, i) {
+    while(i < arr.length) {
+      const data = await asyncMimic(arr[i], interval)
       i++
       yield data
     }
   }
 
-  for await (let data of asyncEventIterator()) {
-    latestData = data
-    console.log(chalk.blueBright('Latest Data: ') + JSON.stringify(latestData))
-    if(currentGame === false) {
-      break
+  async function iterate(incomingData, interval, index) {
+    (async(incomingData, interval, index) => {
+      for await (let data of asyncEventIterator(incomingData, interval, index)) {
+        latestData = data
+        console.log(chalk.blueBright('Latest Data: ') + JSON.stringify(latestData))
+        if(currentGame === false) {
+          break
+        }
+      }
+    })(incomingData, interval, index)
+  }
+
+  async function init() {
+    try {
+      let index = 0
+      const sendDataInterval = 1000
+      const fullMatchData = await getTempSoccerData()
+      await iterate(fullMatchData, sendDataInterval, index)
+    } catch(e) {
+      console.log(e.message)
     }
   }
+
+  this.init = init
 }
+
+// function AsyncMimicFactoryWithTimeline() {
+
+//   function asyncMimic(data, interval) {
+//     return new Promise((resolve) => {
+//       setTimeout(() => {
+//         resolve(data)
+//       }, interval)
+//     })
+//   }
+
+//   async function* asyncEventIterator(arr, interval, i) {
+//     while(i < arr.length) {
+//       const data = await asyncMimic(arr[i], interval)
+//       i++
+//       yield data
+//     }
+//   }
+
+//   async function iterate(incomingData, interval, index) {
+//     (async(incomingData, interval, index) => {
+//       for await (let data of asyncEventIterator(incomingData, interval, index)) {
+//         latestData = data
+//         console.log(chalk.blueBright('Latest Data: ') + JSON.stringify(latestData))
+//         if(currentGame === false) {
+//           break
+//         }
+//       }
+//     })(incomingData, interval, index)
+//   }
+
+//   async function init() {
+//     try {
+//       let index = 0
+//       const sendDataInterval = 1000
+//       const fullMatchData = await getTempSoccerData()
+//       await iterate(fullMatchData, sendDataInterval, index)
+//     } catch(e) {
+//       console.log(e.message)
+//     }
+//   }
+
+//   this.init = init
+// }
 
 async function init() {
   try {
@@ -117,7 +175,9 @@ async function init() {
 
     await initW3CClient(matchId)
     currentGame = true
-    await asyncMimicFactory()
+
+    const asyncMimic = new AsyncMimicFactory()
+    await asyncMimic.init()
 
   } catch (e) {
     console.log('error in Main: ' + chalk.red(e.message))

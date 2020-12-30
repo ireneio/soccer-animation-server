@@ -5,8 +5,6 @@ import { port } from '../app.mjs'
 
 const W3CWebSocketServer = websocket.w3cwebsocket
 
-// export let latestData = null
-
 export async function getTempSoccerData() {
   try {
     const res = await axios.get(`http://localhost:${port}/soccerData.json`)
@@ -17,9 +15,9 @@ export async function getTempSoccerData() {
   }
 }
 
-const mapXValue = 8
-const mapYValue = 3.6
-function mapData(data) {
+function mapTempSoccerData(data) {
+  const mapXMultiplier = 8
+  const mapYMultiplier = 3.6
   const mappedData = data.map(event => {
     const { info,
       matchScore,
@@ -35,8 +33,8 @@ function mapData(data) {
     let mapper = {
       event: '',
       team: '',
-      x: (Number(posX) * mapXValue).toFixed(2),
-      y: (Number(posY) * mapYValue).toFixed(2),
+      x: (Number(posX) * mapXMultiplier).toFixed(2),
+      y: (Number(posY) * mapYMultiplier).toFixed(2),
       matchTime,
       matchScore,
       matchInfo: info
@@ -97,6 +95,11 @@ function mapData(data) {
     }
     return mapper
   })
+  return mappedData
+}
+
+function mapData(data) {
+  const mappedData = mapTempSoccerData(data)
   return mappedData
 }
 
