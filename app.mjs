@@ -10,7 +10,7 @@ import '@babel/polyfill';
 
 export let matchId = ''
 export let latestData = null
-let currentGame = null
+let asyncMimic
 
 const app2 = express();
 
@@ -60,9 +60,7 @@ const app = http.createServer(async function (request, response) {
     response.end()
     await initW3CClient(matchId)
   } else if(request.url.toString() === '/init') {
-    currentGame = false
-    currentGame = true
-    await asyncMimicFactory()
+    await initGameplay()
     console.log(chalk.blueBright('Match Restarted.'))
     response.writeHead(200, 'success', corsHeaders)
     response.end()
@@ -86,24 +84,25 @@ async function init() {
     console.log(chalk.blueBright('Initial Match ID: ' + matchId))
 
     await initW3CClient(matchId)
-    currentGame = true
-
-    const asyncMimic = new AsyncMimicByTimeline(getTempSoccerData)
-    await asyncMimic.init()
-
-    function getEvent() {
-      setTimeout(async () => {
-        const data = await asyncMimic.getPreviousEvent()
-        latestData = { ...data }
-        console.log(asyncMimic.getTimeString())
-        console.log(chalk.blueBright('Latest Data: ') + JSON.stringify(latestData) + '\nEvent End\n------------')
-        getEvent()
-      }, 1000)
-    }
-    getEvent()
   } catch (e) {
     console.log('error in Main: ' + chalk.red(e.message))
   }
+}
+
+async function initGameplay() {
+  asyncMimic = new AsyncMimicByTimeline(getTempSoccerData)
+  await asyncMimic.init()
+
+  function getEvent() {
+    setTimeout(async () => {
+      const data = await asyncMimic.getPreviousEvent()
+      latestData = { ...data }
+      console.log(asyncMimic.getTimeString())
+      console.log(chalk.blueBright('Latest Data: ') + JSON.stringify(latestData) + '\nEvent End\n------------')
+      getEvent()
+    }, 1000)
+  }
+  getEvent()
 }
 
 await init()
